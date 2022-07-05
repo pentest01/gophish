@@ -190,17 +190,17 @@ setupEmail() {
    sleep 4
 
 ### Checking/Installing Apache2
-    a2check=$(which apache2)
+a2check=$(which apache2)
 
-    if [[ $a2check ]];
-    then
+   if [[ $a2check ]];
+   then
       echo "${green}${bold}[+] Apache2 already installed${clear}"
-    else
+   else
       echo "${blue}${bold}[*] Installing Apache...${clear}"
       apt install apache2 -y && 
       cp gophish-ssl.conf /etc/apache2/sites-available
       a2dissite default-ssl.conf && a2ensite gophish-ssl.conf
-    fi
+   fi
    
    echo
    sleep 4
