@@ -14,7 +14,6 @@ if [ "$EUID" -ne 0 ]
 fi
 #
 
-echo
 
 ### Colors
 red=`tput setaf 1`;
