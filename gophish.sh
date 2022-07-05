@@ -7,12 +7,10 @@
 # Note            : 09/20/20 - gophish admin password is not longer static. Added function to grab the temporary password for the initial login. You will be prompted to change the password as you login
 
 
-#
 if [ "$EUID" -ne 0 ]
   then echo "[*] Script must be run as root"
   exit
 fi
-#
 
 
 ### Colors
