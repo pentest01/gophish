@@ -382,9 +382,19 @@ setupSMS() {
    chmod +x /opt/gophish/gosmish.py
 
    ### Installing Twilio
-   echo "${blue}${bold}[*] Installing Twilio...${clear}"
-   pip install -q  twilio
+   twilow=$(which twilio)
 
+   if [[ $twilio ]];
+   then
+      echo "${green}${bold}[+] Twilio already installed...${clear}"
+   else
+      echo "${blue}${bold}[*] Installing Twilio...${clear}"
+      pip install -q  twilio
+   fi
+
+   echo
+   sleep 4
+   
    echo "${blue}${bold}[*] Installing and configuring Postfix for SMS SMTP blackhole...${clear}"
    name=$(hostname)
    echo "postfix    postfix/mailname string sms.sms " | debconf-set-selections
