@@ -371,7 +371,7 @@ setupSMS() {
   
    echo "${blue}${bold}[*] Changing ip...${clear}"
    sed -i 's/127.0.0.1/0.0.0.0/g' /opt/gophish/config.json &&
-   sed -i 's/0.0.0.0/127.0.0.1/g' /opt/gophish/config.json && cd
+   sed -i 's/0.0.0.0/127.0.0.1/g' /opt/gophish/config.json && 
   
    echo
    sleep 2
@@ -432,17 +432,19 @@ letsEncrypt() {
 
 	if [[ $certbot ]];
 	  then
-		echo "${green}${bold}[+] Certbot already installed${clear}"
+	   echo "${green}${bold}[+] Certbot already installed${clear}"
 	else
-		echo "${blue}${bold}[*] Installing Certbot...${clear}"
-		apt-get install certbot -y >/dev/null 2>&1
+	   echo "${blue}${bold}[*] Installing Certbot...${clear}"
+	   apt-get install certbot -y >/dev/null 2>&1
 	fi
 
 echo 
 
    ### Installing SSL Cert 
    echo "${blue}${bold}[*] Installing SSL Cert for $domain...${clear}"
-
+   
+   ### Stopping apache2
+   systemctl stop apache2
    ### Manual
    #./certbot-auto certonly -d $domain --manual --preferred-challenges dns -m example@gmail.com --agree-tos && 
    ### Auto
@@ -452,13 +454,13 @@ echo
    wget https://raw.githubusercontent.com/pentest01/gophish.service/main/gophish-ssl.conf -P /etc/apache2/sites-available/ >/dev/null 2>&1
    cp /etc/letsencrypt/live/$domain/privkey.pem /opt/gophish/privkey.pem &&
    cp /etc/letsencrypt/live/$domain/fullchain.pem /opt/gophish/fullchain.pem &&
-   sed -i 's!false!true!g' /opt/gophish/config.json &&
-   sed -i 's!:80!:8443!g' /opt/gophish/config.json &&
-   sed -i 's!ssl-cert-snakeoil.pem!fullchain.pem!g' /etc/apache2/sites-available/gophish-ssl.conf &&
-   sed -i 's!ssl-cert-snakeoil.key!privkey.pem!g' /etc/apache2/sites-available/gophish-ssl.conf &&
-   sed -i 's!example.key!privkey.pem!g' /opt/gophish/config.json &&
-   sed -i 's!gophish_admin.crt!fullchain.pem!g' /opt/gophish/config.json &&
-   sed -i 's!gophish_admin.key!privkey.pem!g' /opt/gophish/config.json &&
+   sed -i 's/false/true/g' /opt/gophish/config.json &&
+   sed -i 's/:80/8443/g' /opt/gophish/config.json &&
+   sed -i 's/ssl-cert-snakeoil.pem/fullchain.pem/g' /etc/apache2/sites-available/gophish-ssl.conf &&
+   sed -i 's/ssl-cert-snakeoil.key/privkey.pem/g' /etc/apache2/sites-available/gophish-ssl.conf &&
+   sed -i 's/example.key/privkey.pem/g' /opt/gophish/config.json &&
+   sed -i 's/gophish_admin.crt/fullchain.pem/g' /opt/gophish/config.json &&
+   sed -i 's/gophish_admin.key/privkey.pem/g' /opt/gophish/config.json &&
    mkdir -p /opt/gophish/static/endpoint &&
    printf "User-agent: *\nDisallow: /" > /opt/gophish/static/endpoint/robots.txt &&
    echo "${green}${bold}[+] Check if the cert is correctly installed: https://$domain/robots.txt${clear}"
@@ -470,7 +472,7 @@ gophishStart() {
    if [[ $service ]];
      then
       sleep 1
-      systemctl restart gophish &&
+      systemctl restart gophish && systemctl restart apache2
       #ipAddr=$(ip -4 addr show | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | grep -v 127.0.0.1)
       ipAddr=$(curl ifconfig.io 2>/dev/null)
       pass=$(cat /var/log/gophish/gophish.log | grep 'Please login with' | cut -d '"' -f 4 | cut -d ' ' -f 10 | tail -n 1)
