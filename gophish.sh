@@ -105,6 +105,7 @@ sleep 4
 dependencyCheck() {
    ### Update Sources
    echo "${blue}${bold}[*] Updating source lists...${clear}"
+   hwclock --hctosys 
    apt update ; apt-get -y upgrade ; apt-get -y dist-upgrade ; apt-get -y autoremove ; apt-get -y autoclean ; echo
    
    echo
@@ -423,10 +424,17 @@ letsEncrypt() {
    fuser -k -s -n tcp 80 
       
    ### Installing certbot-auto
-   echo "${blue}${bold}[*] Installing certbot...${clear}" 
-   #wget https://dl.eff.org/certbot-auto -qq
-   #chmod a+x certbot-auto
-   apt-get install certbot -y
+  certbot=$(which certbot)
+
+	if [[ $certbot ]];
+	then
+		echo "${green}${bold}[+] Certbot already installed${clear}"
+	else
+		echo "${blue}${bold}[*] Installing Certbot...${clear}"
+		apt-get install certbot -y >/dev/null 2>&1
+	fi
+
+echo 
 
    ### Installing SSL Cert 
    echo "${blue}${bold}[*] Installing SSL Cert for $domain...${clear}"
@@ -442,7 +450,6 @@ letsEncrypt() {
    cp /etc/letsencrypt/live/$domain/fullchain.pem /opt/gophish/fullchain.pem &&
    sed -i 's!false!true!g' /opt/gophish/config.json &&
    sed -i 's!:80!:8443!g' /opt/gophish/config.json &&
-   #ssl-cert-snakeoil.pem
    sed -i 's!ssl-cert-snakeoil.pem!fullchain.pem!g' /etc/apache2/sites-available/gophish-ssl.conf &&
    sed -i 's!ssl-cert-snakeoil.key!privkey.pem!g' /etc/apache2/sites-available/gophish-ssl.conf &&
    sed -i 's!example.key!privkey.pem!g' /opt/gophish/config.json &&
