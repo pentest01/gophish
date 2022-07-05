@@ -2,7 +2,7 @@
 # Version         : 3.0
 # Created date    : 12/09/2019
 # Last update     : 07/05/2022
-# Author          : rarely.seen
+# Author          : pentest.01
 # Description     : Automated script to install gophish with letsencrypt
 # Note            : 09/20/20 - gophish admin password is not longer static. Added function to grab the temporary password for the initial login. You will be prompted to change the password as you login
 
@@ -273,7 +273,7 @@ setupEmail() {
   
   echo "${blue}${bold}[*] Changing ip...${clear}"
   sed -i 's/127.0.0.1/0.0.0.0/g' /opt/gophish/config.json &&
-  sed -i 's/0.0.0.0/127.0.0.1/g' /opt/gophish/config.json && cd
+  sed -i 's/0.0.0.0/127.0.0.1/g' /opt/gophish/config.json && 
   
   echo
   sleep 2
