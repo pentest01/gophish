@@ -1,0 +1,23 @@
+
+####################################################################
+# /etc/systemd/system/gophish.service
+# Description: Initialization file: service gophish {start|stop|status} 
+# Config:/opt/gophish/config.json
+####################################################################
+
+[Unit]
+Description=gophish
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/bin/sh -c "/opt/gophish/gophish >>${STDOUT} 2>>${STDERR}"
+Restart=always
+
+User=gophish
+Environment='STDOUT=/var/log/gophish/gophish.log'
+Environment='STDERR=/var/log/gophish/gophish.log'
+WorkingDirectory=/opt/gophish
+
+[Install]
+WantedBy=multi-user.target
