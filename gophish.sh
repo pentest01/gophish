@@ -243,9 +243,9 @@ setupEmail() {
       echo
       sleep 2
    # Downloading external files
-      wget https://raw.githubusercontent.com/puzzlepeaches/sneaky_gophish/main/files/phish.go -P /opt/gophish/
+      wget https://raw.githubusercontent.com/pentest01/gophish-extension/main/phish.go -P /opt/gophish/
       sleep 2
-      wget https://raw.githubusercontent.com/puzzlepeaches/sneaky_gophish/main/files/404.html -P /opt/gophish/
+      wget https://raw.githubusercontent.com/pentest01/gophish-extension/main/404.html -P /opt/gophish/
       echo
       sleep 2
    # Deleting phish.go
