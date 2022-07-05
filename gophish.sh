@@ -121,7 +121,7 @@ dependencyCheck() {
    unzip=$(which unzip)
 
    if [[ $unzip ]];
-   then
+     then
       echo "${green}${bold}[+] Unzip already installed${clear}"
    else
       echo "${blue}${bold}[*] Installing unzip...${clear}"
@@ -135,7 +135,7 @@ dependencyCheck() {
    gocheck=$(which go)
 
    if [[ $gocheck ]];
-   then
+     then
       echo "${green}${bold}[+] Golang already installed${clear}"
    else
       echo "${blue}${bold}[*] Installing Golang...${clear}"
@@ -149,7 +149,7 @@ dependencyCheck() {
    gitcheck=$(which git)
 
    if [[ $gitcheck ]];
-   then
+     then
       echo "${green}${bold}[+] Git already installed${clear}"
    else
       echo "${blue}${bold}[*] Installing Git...${clear}"
@@ -163,7 +163,7 @@ dependencyCheck() {
    a2check=$(which apache2)
 
    if [[ $a2check ]];
-   then
+     then
       echo "${green}${bold}[+] Apache2 already installed${clear}"
    else
       echo "${blue}${bold}[*] Installing Apache...${clear}"
@@ -178,7 +178,7 @@ dependencyCheck() {
    pipcheck=$(which pip)
 
    if [[ $pipcheck ]];
-   then
+     then
       echo "${green}${bold}[+] Pip already installed${clear}"
    else
       echo "${blue}${bold}[*] Installing pip...${clear}"
@@ -263,7 +263,7 @@ setupEmail() {
       sleep 2
 
    if [ "$rid" != "" ]
-   then
+     then
       echo "${blue}${bold}[*] Updating \"rid\" to \"$rid\"${clear}"
       sed -i 's!rid!'$rid'!g' /opt/gophish/models/campaign.go
       ridConfirm=$(cat /opt/gophish/models/campaign.go | grep $rid)
@@ -359,7 +359,7 @@ setupSMS() {
 
 
    if [ "$rid" != "" ]
-   then
+     then
       echo "${blue}${bold}[*] Updating \"rid\" to \"$rid\"${clear}"
            sed -i 's!rid!'$rid'!g' /opt/gophish/models/campaign.go
       ridConfirm=$(cat /opt/gophish/models/campaign.go | grep $rid)
@@ -383,7 +383,7 @@ setupSMS() {
    twilow=$(which twilio)
 
    if [[ $twilio ]];
-   then
+     then
       echo "${green}${bold}[+] Twilio already installed...${clear}"
    else
       echo "${blue}${bold}[*] Installing Twilio...${clear}"
@@ -426,7 +426,7 @@ letsEncrypt() {
   certbot=$(which certbot)
 
 	if [[ $certbot ]];
-	then
+	  then
 		echo "${green}${bold}[+] Certbot already installed${clear}"
 	else
 		echo "${blue}${bold}[*] Installing Certbot...${clear}"
@@ -463,7 +463,7 @@ gophishStart() {
    service=$(ls /etc/systemd/system/gophish.service 2>/dev/null)
    
    if [[ $service ]];
-   then
+     then
       sleep 1
       systemctl restart gophish &&
       #ipAddr=$(ip -4 addr show | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | grep -v 127.0.0.1)
@@ -520,6 +520,6 @@ while getopts ":r:esd:ch" opt; do
 done
 
 if [[ $# -eq 0 ]];
-then
+  then
    exit_error
 fi
