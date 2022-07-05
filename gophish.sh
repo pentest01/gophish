@@ -268,7 +268,7 @@ setupEmail() {
    if [ "$rid" != "" ]
    then
       echo "${blue}${bold}[*] Updating \"rid\" to \"$rid\"${clear}"
-           sed -i 's!rid!'$rid'!g' /opt/gophish/models/campaign.go
+      sed -i 's!rid!'$rid'!g' /opt/gophish/models/campaign.go
       ridConfirm=$(cat /opt/gophish/models/campaign.go | grep $rid)
       echo "${blue}${bold}[*] Confirmation: $ridConfirm (campaign.go)${clear}"
     fi
@@ -302,15 +302,15 @@ setupSMS() {
    sleep 4
 
 ### Checking/Installing Apache2
-        a2check=$(which apache2)
+a2check=$(which apache2)
 
-        if [[ $a2check ]];
-        then
-                echo "${green}${bold}[+] Apache2 already installed${clear}"
-        else
-                echo "${blue}${bold}[*] Installing Apache...${clear}"
-                apt install apache2 -y && 
-        fi
+if [[ $a2check ]];
+then
+   echo "${green}${bold}[+] Apache2 already installed${clear}"
+else
+   echo "${blue}${bold}[*] Installing Apache...${clear}"
+   apt install apache2 -y && 
+fi
    
    echo
    sleep 4
