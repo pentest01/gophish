@@ -439,6 +439,7 @@ echo
    sed -i 's/gophish_admin.key/privkey.pem/g' /opt/gophish/config.json &&
    mkdir -p /opt/gophish/static/endpoint &&
    printf "User-agent: *\nDisallow: /" > /opt/gophish/static/endpoint/robots.txt &&
+   echo
    echo "${green}${bold}[+] Check if the cert is correctly installed: https://$domain/robots.txt${clear}"
 }
 
