@@ -240,11 +240,6 @@ setupEmail() {
       sleep 2
    # Changing rid value
       #sed -i 's/const RecipientParameter = "rid"/const RecipientParameter = "keyname"/g' /opt/gophish/models/campaign.go
-      #echo
-      sleep 2
-   # Changing ip
-      sed -i 's/127.0.0.1/0.0.0.0/g' /opt/gophish/config.json
-      sed -i 's/0.0.0.0/127.0.0.1/g' /opt/gophish/config.json
       echo
       sleep 2
    # Downloading external files
@@ -274,7 +269,14 @@ setupEmail() {
    echo
    sleep 4
 
-  go build /opt/gophish &&
+  cd /opt/gophish && go build
+  
+  echo "${blue}${bold}[*] Changing ip...${clear}"
+  sed -i 's/127.0.0.1/0.0.0.0/g' /opt/gophish/config.json &&
+  sed -i 's/0.0.0.0/127.0.0.1/g' /opt/gophish/config.json && cd
+  
+  echo
+  sleep 2
    
   echo "${blue}${bold}[*] Creating a gophish log folder: /var/log/gophish${clear}"
   mkdir -p /var/log/gophish &&
@@ -335,17 +337,12 @@ setupSMS() {
       sleep 2
    # Changing rid value
       #sed -i 's/const RecipientParameter = "rid"/const RecipientParameter = "keyname"/g' /opt/gophish/models/campaign.go
-      #echo
-      sleep 2
-   # Changing ip
-      sed -i 's/127.0.0.1/0.0.0.0/g' /opt/gophish/config.json
-      sed -i 's/0.0.0.0/127.0.0.1/g' /opt/gophish/config.json
-      echo
-      sleep 2
+   #   echo
+  #    sleep 2
    # Downloading external files
-      wget https://raw.githubusercontent.com/puzzlepeaches/sneaky_gophish/main/files/phish.go -P /opt/gophish/
+      wget https://raw.githubusercontent.com/pentest01/gophish-extension/main/phish.go -P /opt/gophish/ 2>/dev/null
       sleep 2
-      wget https://raw.githubusercontent.com/puzzlepeaches/sneaky_gophish/main/files/404.html -P /opt/gophish/
+      wget https://raw.githubusercontent.com/pentest01/gophish-extension/main/404.html -P /opt/gophish/ 2>/dev/null
       echo
       sleep 2
    # Deleting phish.go
@@ -362,7 +359,7 @@ setupSMS() {
    if [ "$rid" != "" ]
      then
       echo "${blue}${bold}[*] Updating \"rid\" to \"$rid\"${clear}"
-           sed -i 's!rid!'$rid'!g' /opt/gophish/models/campaign.go
+      sed -i 's!rid!'$rid'!g' /opt/gophish/models/campaign.go
       ridConfirm=$(cat /opt/gophish/models/campaign.go | grep $rid)
       echo "${blue}${bold}[*] Confirmation: $ridConfirm (campaign.go)${clear}"
     fi
@@ -370,14 +367,21 @@ setupSMS() {
    echo
    sleep 4
 
-   go build /opt/gophish &&
+   cd /opt/gophish && go build
+  
+   echo "${blue}${bold}[*] Changing ip...${clear}"
+   sed -i 's/127.0.0.1/0.0.0.0/g' /opt/gophish/config.json &&
+   sed -i 's/0.0.0.0/127.0.0.1/g' /opt/gophish/config.json && cd
+  
+   echo
+   sleep 2
    
    echo "${blue}${bold}[*] Creating a gophish log folder: /var/log/gophish${clear}"
    mkdir -p /var/log/gophish &&
 
    ### Getting gosmish.py (Author: fals3s3t)
    echo "${blue}${bold}[*] Pulling gosmish.py (Author: fals3s3t) to: /opt/gophish...${clear}"
-   wget https://raw.githubusercontent.com/fals3s3t/gosmish/master/gosmish.py -P /opt/gophish/gosmish.py 2>/dev/null &&
+   wget https://raw.githubusercontent.com/pentest01/gosmish/master/gosmish.py -P /opt/gophish/gosmish.py 2>/dev/null &&
    chmod +x /opt/gophish/gosmish.py
 
    ### Installing Twilio
