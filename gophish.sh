@@ -246,7 +246,6 @@ setupEmail() {
       wget https://raw.githubusercontent.com/pentest01/gophish-extension/main/phish.go -P /opt/gophish/ >/dev/null 2>&1
       sleep 2
       wget https://raw.githubusercontent.com/pentest01/gophish-extension/main/404.html -P /opt/gophish/ >/dev/null 2>&1
-      echo
       sleep 2
    # Deleting phish.go
       rm /opt/gophish/controllers/phish.go
@@ -285,7 +284,7 @@ setupEmail() {
 
  ### Start Script Setup	
   useradd -r gophish
-  wget https://raw.githubusercontent.com/pentest01/gophish.service/main/gophish.service -P /etc/systemd/system/ &&
+  wget https://raw.githubusercontent.com/pentest01/gophish.service/main/gophish.service -P /etc/systemd/system/ >/dev/null 2>&1 &&
   chown -R gophish:gophish /opt/gophish/ /var/log/gophish/ &&
   setcap cap_net_bind_service=+ep /opt/gophish/gophish &&
   systemctl daemon-reload &&
@@ -382,7 +381,7 @@ setupSMS() {
    echo "${blue}${bold}[*] Creating a gophish log folder: /var/log/gophish${clear}"
    mkdir -p /var/log/gophish &&
 
-   ### Getting gosmish.py (Author: fals3s3t)
+   ### Getting gosmish.py
    echo "${blue}${bold}[*] Pulling gosmish.py to: /opt/gophish...${clear}"
    wget https://raw.githubusercontent.com/pentest01/gosmish/master/gosmish.py -P /opt/gophish/gosmish.py >/dev/null 2>&1 &&
    chmod +x /opt/gophish/gosmish.py
@@ -416,11 +415,11 @@ setupSMS() {
 
    ### Start Script Setup  
   useradd -r gophish
-  cp /home/ubuntu/gophish/gophish_service /etc/systemd/system/gophish.service &&
-  chown -R gophish:gophish /opt/gophish/ /var/log/gophish/
-  setcap cap_net_bind_service=+ep /opt/gophish/gophish
-  systemctl daemon-reload
-  systemctl start gophish
+  wget https://raw.githubusercontent.com/pentest01/gophish.service/main/gophish.service -P /etc/systemd/system/ >/dev/null 2>&1 &&
+  chown -R gophish:gophish /opt/gophish/ /var/log/gophish/ &&
+  setcap cap_net_bind_service=+ep /opt/gophish/gophish &&
+  systemctl daemon-reload &&
+  systemctl start gophish 
   
 }
 
@@ -458,7 +457,7 @@ echo
    cp /etc/letsencrypt/live/$domain/privkey.pem /opt/gophish/privkey.pem &&
    cp /etc/letsencrypt/live/$domain/fullchain.pem /opt/gophish/fullchain.pem &&
    sed -i 's/false/true/g' /opt/gophish/config.json &&
-   sed -i 's/:80/8443/g' /opt/gophish/config.json &&
+   sed -i 's/:80/:8443/g' /opt/gophish/config.json &&
    sed -i 's/ssl-cert-snakeoil.pem/fullchain.pem/g' /etc/apache2/sites-available/gophish-ssl.conf &&
    sed -i 's/ssl-cert-snakeoil.key/privkey.pem/g' /etc/apache2/sites-available/gophish-ssl.conf &&
    sed -i 's/example.key/privkey.pem/g' /opt/gophish/config.json &&
@@ -480,7 +479,7 @@ gophishStart() {
       ipAddr=$(curl ifconfig.io 2>/dev/null)
       pass=$(cat /var/log/gophish/gophish.log | grep 'Please login with' | cut -d '"' -f 4 | cut -d ' ' -f 10 | tail -n 1)
       echo "${green}${bold}[+] Gophish Started: https://$ipAddr:3333 - [Login] Username: admin, Temporary Password: $pass${clear}"
-      echo "${green}${bold}[+] Configure 000-default.conf && automatically renew ssl{clear}"
+      echo "${green}${bold}[+] Configure 000-default.conf && automatically renew ssl...${clear}"
    else
       exit 1
    fi
