@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
-# Version         : 2.0
+# Version         : 3.0
 # Created date    : 12/09/2019
-# Last update     : 09/27/2020
-# Author          : bigb0ss
-# Description     : Automated script to install gophish
+# Last update     : 07/05/2022
+# Author          : rarely.seen
+# Description     : Automated script to install gophish with letsencrypt
 # Note            : 09/20/20 - gophish admin password is not longer static. Added function to grab the temporary password for the initial login. You will be prompted to change the password as you login
-#
+
+
 #
 if [ "$EUID" -ne 0 ]
   then echo "[*] Script must be run as root"
@@ -13,16 +14,7 @@ if [ "$EUID" -ne 0 ]
 fi
 #
 
-#echo
-#adduser gouser && 
-#echo
-#sleep 2
-#usermod -aG sudo gouser &&
-#echo
-#sleep 2
-#su - gouser &&
-#whoami
-#echo
+echo
 
 ### Colors
 red=`tput setaf 1`;
@@ -205,8 +197,9 @@ setupEmail() {
                 echo "${green}${bold}[+] Apache2 already installed${clear}"
         else
                 echo "${blue}${bold}[*] Installing Apache...${clear}"
-                apt install apache2 -y && rm /etc/apache2/sites-available/000-default.conf %% 
+                apt install apache2 -y && 
                 cp gophish-ssl.conf /etc/apache2/sites-available
+		a2dissite default-ssl.conf && a2ensite gophish-ssl.conf
         fi
    
    echo
@@ -283,17 +276,17 @@ setupEmail() {
    echo
    sleep 4
 
-   go build /opt/gophish &&
+  go build /opt/gophish &&
    
-        echo "${blue}${bold}[*] Creating a gophish log folder: /var/log/gophish${clear}"
-        mkdir -p /var/log/gophish &&
+  echo "${blue}${bold}[*] Creating a gophish log folder: /var/log/gophish${clear}"
+  mkdir -p /var/log/gophish &&
 
  ### Start Script Setup	
   useradd -r gophish
-	cp gophish_service /etc/systemd/system/gophish.service &&
+  cp gophish_service /etc/systemd/system/gophish.service &&
   chown -R gophish:gophish /opt/gophish/ /var/log/gophish/
   setcap cap_net_bind_service=+ep /opt/gophish/gophish
-	systemctl daemon-reload
+  systemctl daemon-reload
   systemctl start gophish
 
 }
@@ -422,10 +415,10 @@ setupSMS() {
 
    ### Start Script Setup  
   useradd -r gophish
-	cp gophish_service /etc/systemd/system/gophish.service &&
+  cp gophish_service /etc/systemd/system/gophish.service &&
   chown -R gophish:gophish /opt/gophish/ /var/log/gophish/
   setcap cap_net_bind_service=+ep /opt/gophish/gophish
-	systemctl daemon-reload
+  systemctl daemon-reload
   systemctl start gophish
   
 }
@@ -456,7 +449,9 @@ letsEncrypt() {
    cp /etc/letsencrypt/live/$domain/fullchain.pem /opt/gophish/fullchain.pem &&
    sed -i 's!false!true!g' /opt/gophish/config.json &&
    sed -i 's!:80!:8443!g' /opt/gophish/config.json &&
-   sed -i 's!example.crt!fullchain.pem!g' /opt/gophish/config.json &&
+   #ssl-cert-snakeoil.pem
+   sed -i 's!ssl-cert-snakeoil.pem!fullchain.pem!g' /etc/apache2/sites-available/gophish-ssl.conf &&
+   sed -i 's!ssl-cert-snakeoil.key!privkey.pem!g' /etc/apache2/sites-available/gophish-ssl.conf &&
    sed -i 's!example.key!privkey.pem!g' /opt/gophish/config.json &&
    sed -i 's!gophish_admin.crt!fullchain.pem!g' /opt/gophish/config.json &&
    sed -i 's!gophish_admin.key!privkey.pem!g' /opt/gophish/config.json &&
