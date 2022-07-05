@@ -484,6 +484,7 @@ gophishStart() {
 cleanUp() {
    echo "${green}${bold}Cleaning...1...2...3...${clear}"
    systemctl stop gophish 2>/dev/null
+   deluser gophish 2>/dev/null
    rm -rf /opt/gophish/ 2>/dev/null
    rm /etc/systemd/system/gophish.service 2>/dev/null
    rm /etc/letsencrypt/keys/* 2>/dev/null
