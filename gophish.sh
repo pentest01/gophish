@@ -134,44 +134,44 @@ dependencyCheck() {
    sleep 4
 
    ### Checking/Installing go
-        gocheck=$(which go)
+   gocheck=$(which go)
 
-        if [[ $gocheck ]];
-        then
-                echo "${green}${bold}[+] Golang already installed${clear}"
-        else
-                echo "${blue}${bold}[*] Installing Golang...${clear}"
-                apt install golang-go -y
-        fi
+   if [[ $gocheck ]];
+   then
+      echo "${green}${bold}[+] Golang already installed${clear}"
+   else
+      echo "${blue}${bold}[*] Installing Golang...${clear}"
+      apt install golang-go -y
+   fi
    
    echo
    sleep 4
 
    ### Checking/Installing git
-        gitcheck=$(which git)
+   gitcheck=$(which git)
 
-        if [[ $gitcheck ]];
-        then
-                echo "${green}${bold}[+] Git already installed${clear}"
-        else
-                echo "${blue}${bold}[*] Installing Git...${clear}"
-                apt-get install git -y
-        fi
+   if [[ $gitcheck ]];
+   then
+      echo "${green}${bold}[+] Git already installed${clear}"
+   else
+      echo "${blue}${bold}[*] Installing Git...${clear}"
+      apt-get install git -y
+   fi
 
    echo
    sleep 4
 
    ### Checking/Installing pip (*Needed to install Twilio lib)
-        pipcheck=$(which pip)
+   pipcheck=$(which pip)
 
    if [[ $pipcheck ]];
-        then
-                echo "${green}${bold}[+] Pip already installed${clear}"
-        else
-                echo "${blue}${bold}[*] Installing pip...${clear}"
-                apt-get install python3-pip -y
+   then
+      echo "${green}${bold}[+] Pip already installed${clear}"
+   else
+      echo "${blue}${bold}[*] Installing pip...${clear}"
+      apt-get install python3-pip -y
       
-        fi
+   fi
 
 }
 
@@ -190,17 +190,17 @@ setupEmail() {
    sleep 4
 
 ### Checking/Installing Apache2
-        a2check=$(which apache2)
+    a2check=$(which apache2)
 
-        if [[ $a2check ]];
-        then
-                echo "${green}${bold}[+] Apache2 already installed${clear}"
-        else
-                echo "${blue}${bold}[*] Installing Apache...${clear}"
-                apt install apache2 -y && 
-                cp gophish-ssl.conf /etc/apache2/sites-available
-		a2dissite default-ssl.conf && a2ensite gophish-ssl.conf
-        fi
+    if [[ $a2check ]];
+    then
+      echo "${green}${bold}[+] Apache2 already installed${clear}"
+    else
+      echo "${blue}${bold}[*] Installing Apache...${clear}"
+      apt install apache2 -y && 
+      cp gophish-ssl.conf /etc/apache2/sites-available
+      a2dissite default-ssl.conf && a2ensite gophish-ssl.conf
+    fi
    
    echo
    sleep 4
