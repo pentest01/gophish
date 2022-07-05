@@ -168,8 +168,7 @@ dependencyCheck() {
    else
       echo "${blue}${bold}[*] Installing Apache...${clear}"
       apt install apache2 -y && 
-      cp gophish-ssl.conf /etc/apache2/sites-available
-      a2dissite default-ssl.conf && a2ensite gophish-ssl.conf
+      systemctl reload apache2
    fi
    
    echo
