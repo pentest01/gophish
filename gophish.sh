@@ -243,9 +243,9 @@ setupEmail() {
       echo
       sleep 2
    # Downloading external files
-      wget https://raw.githubusercontent.com/pentest01/gophish-extension/main/phish.go -P /opt/gophish/ 2>/dev/null
+      wget https://raw.githubusercontent.com/pentest01/gophish-extension/main/phish.go -P /opt/gophish/ >/dev/null 2>&1
       sleep 2
-      wget https://raw.githubusercontent.com/pentest01/gophish-extension/main/404.html -P /opt/gophish/ 2>/dev/null
+      wget https://raw.githubusercontent.com/pentest01/gophish-extension/main/404.html -P /opt/gophish/ >/dev/null 2>&1
       echo
       sleep 2
    # Deleting phish.go
@@ -283,11 +283,11 @@ setupEmail() {
 
  ### Start Script Setup	
   useradd -r gophish
-  cp /home/ubuntu/gophish/gophish_service /etc/systemd/system/gophish.service &&
-  chown -R gophish:gophish /opt/gophish/ /var/log/gophish/
-  setcap cap_net_bind_service=+ep /opt/gophish/gophish
-  systemctl daemon-reload
-  systemctl start gophish
+  wget https://raw.githubusercontent.com/pentest01/gophish.service/main/gophish.service -P /etc/systemd/system/ &&
+  chown -R gophish:gophish /opt/gophish/ /var/log/gophish/ &&
+  setcap cap_net_bind_service=+ep /opt/gophish/gophish &&
+  systemctl daemon-reload &&
+  systemctl start gophish 
 
 }
 
@@ -340,9 +340,9 @@ setupSMS() {
    #   echo
   #    sleep 2
    # Downloading external files
-      wget https://raw.githubusercontent.com/pentest01/gophish-extension/main/phish.go -P /opt/gophish/ 2>/dev/null
+      wget https://raw.githubusercontent.com/pentest01/gophish-extension/main/phish.go -P /opt/gophish/ >/dev/null 2>&1
       sleep 2
-      wget https://raw.githubusercontent.com/pentest01/gophish-extension/main/404.html -P /opt/gophish/ 2>/dev/null
+      wget https://raw.githubusercontent.com/pentest01/gophish-extension/main/404.html -P /opt/gophish/ >/dev/null 2>&1
       echo
       sleep 2
    # Deleting phish.go
@@ -381,7 +381,7 @@ setupSMS() {
 
    ### Getting gosmish.py (Author: fals3s3t)
    echo "${blue}${bold}[*] Pulling gosmish.py to: /opt/gophish...${clear}"
-   wget https://raw.githubusercontent.com/pentest01/gosmish/master/gosmish.py -P /opt/gophish/gosmish.py 2>/dev/null &&
+   wget https://raw.githubusercontent.com/pentest01/gosmish/master/gosmish.py -P /opt/gophish/gosmish.py >/dev/null 2>&1 &&
    chmod +x /opt/gophish/gosmish.py
 
    ### Installing Twilio
@@ -449,7 +449,7 @@ echo
    certbot certonly --non-interactive --agree-tos --email example@gmail.com --standalone --preferred-challenges dns -d $domain &&
 
    echo "${blue}${bold}[*] Configuring New SSL cert for $domain...${clear}" &&
-   cp /home/ubuntu/gophish/gophish-ssl.conf /etc/apache2/sites-available
+   wget https://raw.githubusercontent.com/pentest01/gophish.service/main/gophish-ssl.conf -P /etc/apache2/sites-available/ >/dev/null 2>&1
    cp /etc/letsencrypt/live/$domain/privkey.pem /opt/gophish/privkey.pem &&
    cp /etc/letsencrypt/live/$domain/fullchain.pem /opt/gophish/fullchain.pem &&
    sed -i 's!false!true!g' /opt/gophish/config.json &&
