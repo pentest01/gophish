@@ -274,6 +274,8 @@ setupEmail() {
   echo "${blue}${bold}[*] Changing ip...${clear}"
   sed -i 's/127.0.0.1/0.0.0.0/g' /opt/gophish/config.json &&
   sed -i 's/0.0.0.0/127.0.0.1/g' /opt/gophish/config.json && 
+  sed -i 's/80/8080/g' /opt/gophish/config.json && 
+
   
   echo
   sleep 2
