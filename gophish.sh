@@ -121,6 +121,12 @@ dependencyCheck() {
    echo
    sleep 4
    
+    echo "${blue}${bold}[*] Creating a gophish folder: /opt/gophish${clear}"
+    mkdir -p /opt/gophish
+
+   echo
+   sleep 4
+   
    ### Checking/Installing unzip
    unzip=$(which unzip)
 
@@ -184,11 +190,28 @@ sleep 4
 setupEmail() {
    ### Cleaning Port 80
    fuser -k -s -n tcp 80
+   
+   ### Deleting Previous Gophish Source (*Need to be removed to update new rid)
+   rm -rf /opt/gophish/
 
    echo
    sleep 4
 
-   ### Installing GoPhish v0.8.0
+### Checking/Installing Apache2
+        a2check=$(which apache2)
+
+        if [[ $a2check ]];
+        then
+                echo "${green}${bold}[+] Apache2 already installed${clear}"
+        else
+                echo "${blue}${bold}[*] Installing Apache...${clear}"
+                apt install apache2 -y && 
+        fi
+   
+   echo
+   sleep 4
+
+   ### Installing GoPhish v0.11.0
    if [ -d /opt/gophish/.git ]; then
       echo -e "${blue}${bold}[*] Updating Gophish."
       cd /opt/gophish; git pull
@@ -247,9 +270,6 @@ setupEmail() {
       echo
       sleep 2
 
-   echo "${blue}${bold}[*] Creating a gophish folder: /opt/gophish${clear}"
-        mkdir -p /opt/gophish &&
-
    if [ "$rid" != "" ]
    then
       echo "${blue}${bold}[*] Updating \"rid\" to \"$rid\"${clear}"
@@ -276,8 +296,25 @@ setupSMS() {
 
    ### Deleting Previous Gophish Source (*Need to be removed to update new rid)
    rm -rf /opt/gophish/
+   
+   echo
+   sleep 4
 
-    ### Installing GoPhish v0.8.0
+### Checking/Installing Apache2
+        a2check=$(which apache2)
+
+        if [[ $a2check ]];
+        then
+                echo "${green}${bold}[+] Apache2 already installed${clear}"
+        else
+                echo "${blue}${bold}[*] Installing Apache...${clear}"
+                apt install apache2 -y && 
+        fi
+   
+   echo
+   sleep 4
+
+    ### Installing GoPhish v0.11.0
       if [ -d /opt/gophish/.git ]; then
       echo -e "${blue}${bold}[*] Updating Gophish."
       cd /opt/gophish; git pull
@@ -335,8 +372,6 @@ setupSMS() {
       echo
       sleep 2
 
-   echo "${blue}${bold}[*] Creating a gophish folder: /opt/gophish${clear}"
-        mkdir -p /opt/gophish &&
 
    if [ "$rid" != "" ]
    then
@@ -398,13 +433,13 @@ letsEncrypt() {
    ### Manual
    #./certbot-auto certonly -d $domain --manual --preferred-challenges dns -m example@gmail.com --agree-tos && 
    ### Auto
-   certbot certonly --non-interactive --agree-tos --email example@gmail.com --standalone --preferred-challenges http -d $domain &&
+   certbot certonly --non-interactive --agree-tos --email example@gmail.com --standalone --preferred-challenges dns -d $domain &&
 
    echo "${blue}${bold}[*] Configuring New SSL cert for $domain...${clear}" &&
    cp /etc/letsencrypt/live/$domain/privkey.pem /opt/gophish/domain.key &&
    cp /etc/letsencrypt/live/$domain/fullchain.pem /opt/gophish/domain.crt &&
    sed -i 's!false!true!g' /opt/gophish/config.json &&
-   sed -i 's!:80!:443!g' /opt/gophish/config.json &&
+   sed -i 's!:80!:8443!g' /opt/gophish/config.json &&
    sed -i 's!example.crt!domain.crt!g' /opt/gophish/config.json &&
    sed -i 's!example.key!domain.key!g' /opt/gophish/config.json &&
    sed -i 's!gophish_admin.crt!domain.crt!g' /opt/gophish/config.json &&
