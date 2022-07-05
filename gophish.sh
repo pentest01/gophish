@@ -283,7 +283,7 @@ setupEmail() {
 
  ### Start Script Setup	
   useradd -r gophish
-  cp gophish_service /etc/systemd/system/gophish.service &&
+  cp /home/ubuntu/gophish/gophish_service /etc/systemd/system/gophish.service &&
   chown -R gophish:gophish /opt/gophish/ /var/log/gophish/
   setcap cap_net_bind_service=+ep /opt/gophish/gophish
   systemctl daemon-reload
@@ -413,7 +413,7 @@ setupSMS() {
 
    ### Start Script Setup  
   useradd -r gophish
-  cp gophish_service /etc/systemd/system/gophish.service &&
+  cp /home/ubuntu/gophish/gophish_service /etc/systemd/system/gophish.service &&
   chown -R gophish:gophish /opt/gophish/ /var/log/gophish/
   setcap cap_net_bind_service=+ep /opt/gophish/gophish
   systemctl daemon-reload
@@ -449,7 +449,7 @@ echo
    certbot certonly --non-interactive --agree-tos --email example@gmail.com --standalone --preferred-challenges dns -d $domain &&
 
    echo "${blue}${bold}[*] Configuring New SSL cert for $domain...${clear}" &&
-   cp gophish-ssl.conf /etc/apache2/sites-available
+   cp /home/ubuntu/gophish/gophish-ssl.conf /etc/apache2/sites-available
    cp /etc/letsencrypt/live/$domain/privkey.pem /opt/gophish/privkey.pem &&
    cp /etc/letsencrypt/live/$domain/fullchain.pem /opt/gophish/fullchain.pem &&
    sed -i 's!false!true!g' /opt/gophish/config.json &&
