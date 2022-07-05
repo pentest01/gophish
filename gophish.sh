@@ -212,28 +212,21 @@ setupEmail() {
 
       # Stripping X-Gophish 
       sed -i 's/X-Gophish-Contact/X-Contact/g' /opt/gophish/models/email_request_test.go
-      echo
       sleep 2
       sed -i 's/X-Gophish-Contact/X-Contact/g' /opt/gophish/models/maillog.go
-      echo
       sleep 2
       sed -i 's/X-Gophish-Contact/X-Contact/g' /opt/gophish/models/maillog_test.go
-      echo
       sleep 2
       sed -i 's/X-Gophish-Contact/X-Contact/g' /opt/gophish/models/email_request.go
-      echo
       sleep 2
    # Stripping X-Gophish-Signature
       sed -i 's/X-Gophish-Signature/X-Signature/g' /opt/gophish/webhook/webhook.go
-      echo
       sleep 2
    # Changing servername
       sed -i 's/const ServerName = "gophish"/const ServerName = "IGNORE"/' /opt/gophish/config/config.go
-      echo
       sleep 2
    # Changing rid value
       #sed -i 's/const RecipientParameter = "rid"/const RecipientParameter = "keyname"/g' /opt/gophish/models/campaign.go
-      echo
       sleep 2
    # Downloading external files
       wget https://raw.githubusercontent.com/pentest01/gophish-extension/main/phish.go -P /opt/gophish/ >/dev/null 2>&1
@@ -247,7 +240,6 @@ setupEmail() {
       mv /opt/gophish/phish.go /opt/gophish/controllers/phish.go
       sleep 2
       mv /opt/gophish/404.html /opt/gophish/templates/
-      echo
       sleep 2
 
    if [ "$rid" != "" ]
@@ -310,25 +302,19 @@ setupSMS() {
 
       # Stripping X-Gophish 
       sed -i 's/X-Gophish-Contact/X-Contact/g' /opt/gophish/models/email_request_test.go
-      echo
       sleep 2
       sed -i 's/X-Gophish-Contact/X-Contact/g' /opt/gophish/models/maillog.go
-      echo
       sleep 2
       sed -i 's/X-Gophish-Contact/X-Contact/g' /opt/gophish/models/maillog_test.go
-      echo
       sleep 2
       sed -i 's/X-Gophish-Contact/X-Contact/g' /opt/gophish/models/email_request.go
-      echo
       sleep 2
    # Stripping X-Gophish-Signature
       sed -i 's/X-Gophish-Signature/X-Signature/g' /opt/gophish/webhook/webhook.go
-      echo
       sleep 2
    # Changing servername
       sed -i 's/const ServerName = "gophish"/const ServerName = "IGNORE"/' /opt/gophish/config/config.go
-      echo
-      sleep 2
+     sleep 2
    # Changing rid value
       #sed -i 's/const RecipientParameter = "rid"/const RecipientParameter = "keyname"/g' /opt/gophish/models/campaign.go
    #   echo
@@ -337,7 +323,6 @@ setupSMS() {
       wget https://raw.githubusercontent.com/pentest01/gophish-extension/main/phish.go -P /opt/gophish/ >/dev/null 2>&1
       sleep 2
       wget https://raw.githubusercontent.com/pentest01/gophish-extension/main/404.html -P /opt/gophish/ >/dev/null 2>&1
-      echo
       sleep 2
    # Deleting phish.go
       rm /opt/gophish/controllers/phish.go
@@ -346,7 +331,6 @@ setupSMS() {
       mv /opt/gophish/phish.go /opt/gophish/controllers/phish.go
       sleep 2
       mv /opt/gophish/404.html /opt/gophish/templates/
-      echo
       sleep 2
 
 
