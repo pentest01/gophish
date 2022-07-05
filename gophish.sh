@@ -8,7 +8,7 @@
 
 
 if [ "$EUID" -ne 0 ]
-  then echo "[*] Script must be run as root"
+  then echo "\e[1m" "\e[31m[*] Script must be run as root"
   exit
 fi
 
