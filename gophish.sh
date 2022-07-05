@@ -205,7 +205,8 @@ setupEmail() {
                 echo "${green}${bold}[+] Apache2 already installed${clear}"
         else
                 echo "${blue}${bold}[*] Installing Apache...${clear}"
-                apt install apache2 -y && 
+                apt install apache2 -y && rm /etc/apache2/sites-available/000-default.conf %% 
+                cp gophish-ssl.conf /etc/apache2/sites-available
         fi
    
    echo
@@ -252,6 +253,7 @@ setupEmail() {
       sleep 2
    # Changing ip
       sed -i 's/127.0.0.1/0.0.0.0/g' /opt/gophish/config.json
+      sed -i 's/0.0.0.0/127.0.0.1/g' /opt/gophish/config.json
       echo
       sleep 2
    # Downloading external files
@@ -286,8 +288,14 @@ setupEmail() {
         echo "${blue}${bold}[*] Creating a gophish log folder: /var/log/gophish${clear}"
         mkdir -p /var/log/gophish &&
 
-   ### Start Script Setup  
-  ##sudo /opt/gophish/./gophish 
+ ### Start Script Setup	
+  useradd -r gophish
+	cp gophish_service /etc/systemd/system/gophish.service &&
+  chown -R gophish:gophish /opt/gophish/ /var/log/gophish/
+  setcap cap_net_bind_service=+ep /opt/gophish/gophish
+	systemctl daemon-reload
+  systemctl start gophish
+
 }
 
 setupSMS() {
@@ -354,6 +362,7 @@ setupSMS() {
       sleep 2
    # Changing ip
       sed -i 's/127.0.0.1/0.0.0.0/g' /opt/gophish/config.json
+      sed -i 's/0.0.0.0/127.0.0.1/g' /opt/gophish/config.json
       echo
       sleep 2
    # Downloading external files
@@ -412,7 +421,13 @@ setupSMS() {
    service postfix start &&
 
    ### Start Script Setup  
-  #sudo /opt/gophish/./gophish 
+  useradd -r gophish
+	cp gophish_service /etc/systemd/system/gophish.service &&
+  chown -R gophish:gophish /opt/gophish/ /var/log/gophish/
+  setcap cap_net_bind_service=+ep /opt/gophish/gophish
+	systemctl daemon-reload
+  systemctl start gophish
+  
 }
 
 
@@ -436,31 +451,30 @@ letsEncrypt() {
    certbot certonly --non-interactive --agree-tos --email example@gmail.com --standalone --preferred-challenges dns -d $domain &&
 
    echo "${blue}${bold}[*] Configuring New SSL cert for $domain...${clear}" &&
-   cp /etc/letsencrypt/live/$domain/privkey.pem /opt/gophish/domain.key &&
-   cp /etc/letsencrypt/live/$domain/fullchain.pem /opt/gophish/domain.crt &&
+   cp gophish-ssl.conf /etc/apache2/sites-available
+   cp /etc/letsencrypt/live/$domain/privkey.pem /opt/gophish/privkey.pem &&
+   cp /etc/letsencrypt/live/$domain/fullchain.pem /opt/gophish/fullchain.pem &&
    sed -i 's!false!true!g' /opt/gophish/config.json &&
    sed -i 's!:80!:8443!g' /opt/gophish/config.json &&
-   sed -i 's!example.crt!domain.crt!g' /opt/gophish/config.json &&
-   sed -i 's!example.key!domain.key!g' /opt/gophish/config.json &&
-   sed -i 's!gophish_admin.crt!domain.crt!g' /opt/gophish/config.json &&
-   sed -i 's!gophish_admin.key!domain.key!g' /opt/gophish/config.json &&
+   sed -i 's!example.crt!fullchain.pem!g' /opt/gophish/config.json &&
+   sed -i 's!example.key!privkey.pem!g' /opt/gophish/config.json &&
+   sed -i 's!gophish_admin.crt!fullchain.pem!g' /opt/gophish/config.json &&
+   sed -i 's!gophish_admin.key!privkey.pem!g' /opt/gophish/config.json &&
    mkdir -p /opt/gophish/static/endpoint &&
    printf "User-agent: *\nDisallow: /" > /opt/gophish/static/endpoint/robots.txt &&
    echo "${green}${bold}[+] Check if the cert is correctly installed: https://$domain/robots.txt${clear}"
 }
 
 gophishStart() {
-   service=$(ls /etc/init.d/gophish 2>/dev/null)
-
-    sudo /opt/gophish/./gophish 
-
+   service=$(ls /etc/systemd/system/gophish.service 2>/dev/null)
+   
    if [[ $service ]];
    then
       sleep 1
-      sudo /opt/gophish/./gophish &&
+      systemctl restart gophish &&
       #ipAddr=$(ip -4 addr show | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | grep -v 127.0.0.1)
       ipAddr=$(curl ifconfig.io 2>/dev/null)
-      pass=$(cat /var/log/gophish/gophish.error | grep 'Please login with' | cut -d '"' -f 4 | cut -d ' ' -f 10 | tail -n 1)
+      pass=$(cat /var/log/gophish/gophish.log | grep 'Please login with' | cut -d '"' -f 4 | cut -d ' ' -f 10 | tail -n 1)
       echo "${green}${bold}[+] Gophish Started: https://$ipAddr:3333 - [Login] Username: admin, Temporary Password: $pass${clear}"
    else
       exit 1
@@ -469,11 +483,9 @@ gophishStart() {
 
 cleanUp() {
    echo "${green}${bold}Cleaning...1...2...3...${clear}"
-   service gophish stop 2>/dev/null
+   systemctl stop gophish 2>/dev/null
    rm -rf /opt/gophish/ 2>/dev/null
-   rm certbot-auto* 2>/dev/null
-   rm -rf /opt/gophish 2>/dev/null
-   rm /etc/init.d/gophish 2>/dev/null
+   rm /etc/systemd/system/gophish.service 2>/dev/null
    rm /etc/letsencrypt/keys/* 2>/dev/null
    rm /etc/letsencrypt/csr/* 2>/dev/null
    rm -rf /etc/letsencrypt/archive/* 2>/dev/null
