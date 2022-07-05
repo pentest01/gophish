@@ -48,7 +48,8 @@ EOF
 usage() {
   local ec=0
 
-  if [ $# -ge 2 ] ; then
+  if [ $# -ge 2 ] ; 
+    then
     ec="$1" ; shift
     printf "%s\n\n" "$*" >&2
   fi
