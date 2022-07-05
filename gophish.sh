@@ -380,7 +380,7 @@ setupSMS() {
    mkdir -p /var/log/gophish &&
 
    ### Getting gosmish.py (Author: fals3s3t)
-   echo "${blue}${bold}[*] Pulling gosmish.py (Author: fals3s3t) to: /opt/gophish...${clear}"
+   echo "${blue}${bold}[*] Pulling gosmish.py to: /opt/gophish...${clear}"
    wget https://raw.githubusercontent.com/pentest01/gosmish/master/gosmish.py -P /opt/gophish/gosmish.py 2>/dev/null &&
    chmod +x /opt/gophish/gosmish.py
 
@@ -475,6 +475,7 @@ gophishStart() {
       ipAddr=$(curl ifconfig.io 2>/dev/null)
       pass=$(cat /var/log/gophish/gophish.log | grep 'Please login with' | cut -d '"' -f 4 | cut -d ' ' -f 10 | tail -n 1)
       echo "${green}${bold}[+] Gophish Started: https://$ipAddr:3333 - [Login] Username: admin, Temporary Password: $pass${clear}"
+      echo "${green}${bold}[+] Configure 000-default.conf && automatically renew ssl{clear}"
    else
       exit 1
    fi
