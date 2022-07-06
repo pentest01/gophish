@@ -238,9 +238,8 @@ setupEmail() {
 
   cd /opt/gophish && go build
   
-  echo "${blue}${bold}[*] Changing ip and port...${clear}"
-  sed -i 's/127.0.0.1/0.0.0.0/g' /opt/gophish/config.json &&
-#  sed -i 's/0.0.0.0:80/127.0.0.1:8080/g' /opt/gophish/config.json && 
+  echo "${blue}${bold}[*] Changing ip...${clear}"
+  sed -i 's/127.0.0.1:3333/0.0.0.0:3333/g' /opt/gophish/config.json &&
   
   echo
   sleep 2
@@ -253,7 +252,7 @@ setupEmail() {
   wget https://raw.githubusercontent.com/pentest01/gophish.service/main/gophish.service -P /etc/systemd/system/ >/dev/null 2>&1 &&
   chown -R gophish:gophish /opt/gophish/ /var/log/gophish/ &&
   setcap cap_net_bind_service=+ep /opt/gophish/gophish &&
-  systemctl daemon-reload &&
+  systemctl daemon-reload
   systemctl enable gophish 
 
 }
@@ -334,8 +333,7 @@ setupSMS() {
    cd /opt/gophish && go build
    
    echo "${blue}${bold}[*] Changing ip...${clear}"
-   sed -i 's/127.0.0.1/0.0.0.0/g' /opt/gophish/config.json &&
- #  sed -i 's/0.0.0.0:80/127.0.0.1:8080/g' /opt/gophish/config.json && 
+   sed -i 's/127.0.0.1:3333/0.0.0.0:3333/g' /opt/gophish/config.json &&
    
    echo
    sleep 2
@@ -397,7 +395,7 @@ setupSMS() {
   wget https://raw.githubusercontent.com/pentest01/gophish.service/main/gophish.service -P /etc/systemd/system/ >/dev/null 2>&1 &&
   chown -R gophish:gophish /opt/gophish/ /var/log/gophish/ &&
   setcap cap_net_bind_service=+ep /opt/gophish/gophish &&
-  systemctl daemon-reload &&
+  systemctl daemon-reload
   systemctl enable gophish 
   
 }
@@ -434,6 +432,7 @@ echo
 
    echo "${blue}${bold}[*] Configuring New SSL cert for $domain...${clear}"
    wget https://raw.githubusercontent.com/pentest01/gophish.service/main/gophish-ssl.conf -P /etc/apache2/sites-available/ >/dev/null 2>&1
+   a2ensite gophish-ssl.conf && a2enmod ssl && a2enmod proxy && a2enmod proxy_http
    cp /etc/letsencrypt/live/$domain/privkey.pem /opt/gophish/privkey.pem &&
    cp /etc/letsencrypt/live/$domain/fullchain.pem /opt/gophish/fullchain.pem &&
    sed -i 's/false/true/g' /opt/gophish/config.json &&
@@ -456,11 +455,8 @@ gophishStart() {
    if [[ $service ]];
      then
       sleep 2
-      systemctl restart gophish 
+      systemctl restart gophish && sudo systemctl restart apache2
       echo
-      a2ensite gophish-ssl.conf && a2enmod ssl && a2enmod proxy && a2enmod proxy_http
-      echo
-      systemctl restart apache2
       #ipAddr=$(ip -4 addr show | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | grep -v 127.0.0.1)
       ipAddr=$(curl ifconfig.io 2>/dev/null)
       pass=$(cat /var/log/gophish/gophish.log | grep 'Please login with' | cut -d '"' -f 4 | cut -d ' ' -f 10 | tail -n 1)
