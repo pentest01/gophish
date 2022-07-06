@@ -405,9 +405,12 @@ setupSMS() {
 letsEncrypt() {
    ### Clearning Port 80
    fuser -k -s -n tcp 80 
+   
+   ### Stopping apache2
+   systemctl stop apache2
       
    ### Installing certbot-auto
-  certbot=$(which certbot)
+   certbot=$(which certbot)
 
 	if [[ $certbot ]];
 	  then
@@ -422,14 +425,12 @@ echo
    ### Installing SSL Cert 
    echo "${blue}${bold}[*] Installing SSL Cert for $domain...${clear}"
    
-   ### Stopping apache2
-   systemctl stop apache2
    ### Manual
    #./certbot-auto certonly -d $domain --manual --preferred-challenges dns -m example@gmail.com --agree-tos && 
    ### Auto
-   certbot certonly --non-interactive --agree-tos --email example@gmail.com --standalone --preferred-challenges dns -d $domain &&
+   certbot certonly --manual --server https://acme-v02.api.letsencrypt.org/directory --agree-tos --email example@gmail.com --preferred-challenges dns -d $domain 
 
-   echo "${blue}${bold}[*] Configuring New SSL cert for $domain...${clear}" &&
+   echo "${blue}${bold}[*] Configuring New SSL cert for $domain...${clear}"
    wget https://raw.githubusercontent.com/pentest01/gophish.service/main/gophish-ssl.conf -P /etc/apache2/sites-available/ >/dev/null 2>&1
    cp /etc/letsencrypt/live/$domain/privkey.pem /opt/gophish/privkey.pem &&
    cp /etc/letsencrypt/live/$domain/fullchain.pem /opt/gophish/fullchain.pem &&
@@ -452,8 +453,12 @@ gophishStart() {
    
    if [[ $service ]];
      then
-      sleep 1
-      systemctl restart gophish && systemctl restart apache2
+      sleep 2
+      systemctl restart gophish 
+      echo
+      a2ensite gophish-ssl.conf && a2enmod ssl && a2enmod proxy && a2enmod proxy_http
+      echo
+      systemctl restart apache2
       #ipAddr=$(ip -4 addr show | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | grep -v 127.0.0.1)
       ipAddr=$(curl ifconfig.io 2>/dev/null)
       pass=$(cat /var/log/gophish/gophish.log | grep 'Please login with' | cut -d '"' -f 4 | cut -d ' ' -f 10 | tail -n 1)
