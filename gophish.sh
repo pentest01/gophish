@@ -397,6 +397,9 @@ setupSMS() {
   setcap cap_net_bind_service=+ep /opt/gophish/gophish &&
   systemctl daemon-reload
   systemctl enable gophish 
+   
+  echo
+  sleep 4
   
 }
 
