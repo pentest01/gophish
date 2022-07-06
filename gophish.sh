@@ -168,22 +168,8 @@ dependencyCheck() {
    echo
    sleep 4
 
-   ### Checking/Installing pip (*Needed to install Twilio lib)
-   pipcheck=$(which pip)
-
-   if [[ $pipcheck ]];
-     then
-      echo "${green}${bold}[+] Pip already installed${clear}"
-   else
-      echo "${blue}${bold}[*] Installing pip...${clear}"
-      apt-get install python3-pip -y
-      
-   fi
-
 }
 
-echo
-sleep 4
 
 ### Setup Email Version Gophish
 setupEmail() {
@@ -359,7 +345,24 @@ setupSMS() {
    echo "${blue}${bold}[*] Pulling gosmish.py to: /opt/gophish...${clear}"
    wget https://raw.githubusercontent.com/pentest01/gosmish/master/gosmish.py -P /opt/gophish/gosmish.py >/dev/null 2>&1 &&
    chmod +x /opt/gophish/gosmish.py
+   
+   echo
+   sleep 3
+   
+   ### Checking/Installing pip (*Needed to install Twilio lib)
+   pipcheck=$(which pip)
 
+   if [[ $pipcheck ]];
+     then
+      echo "${green}${bold}[+] Pip already installed${clear}"
+   else
+      echo "${blue}${bold}[*] Installing pip...${clear}"
+      apt-get install python3-pip -y 
+   fi
+
+   echo
+   sleep 3
+   
    ### Installing Twilio
    twilow=$(which twilio)
 
@@ -372,7 +375,7 @@ setupSMS() {
    fi
 
    echo
-   sleep 4
+   sleep 3
    
    echo "${blue}${bold}[*] Installing and configuring Postfix for SMS SMTP blackhole...${clear}"
    name=$(hostname)
