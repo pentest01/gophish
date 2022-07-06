@@ -256,8 +256,8 @@ setupEmail() {
   cd /opt/gophish && go build
   
   echo "${blue}${bold}[*] Changing ip and port...${clear}"
-  sed -i 's/127.0.0.1:3333/0.0.0.0:3333/g' /opt/gophish/config.json &&
-  sed -i 's/0.0.0.0:80/127.0.0.1:8080/g' /opt/gophish/config.json && 
+  sed -i 's/127.0.0.1/0.0.0.0/g' /opt/gophish/config.json &&
+#  sed -i 's/0.0.0.0:80/127.0.0.1:8080/g' /opt/gophish/config.json && 
   
   echo
   sleep 2
@@ -271,7 +271,7 @@ setupEmail() {
   chown -R gophish:gophish /opt/gophish/ /var/log/gophish/ &&
   setcap cap_net_bind_service=+ep /opt/gophish/gophish &&
   systemctl daemon-reload &&
-  systemctl start gophish 
+  systemctl enable gophish 
 
 }
 
@@ -346,8 +346,8 @@ setupSMS() {
    cd /opt/gophish && go build
    
    echo "${blue}${bold}[*] Changing ip...${clear}"
-   sed -i 's/127.0.0.1:3333/0.0.0.0:3333/g' /opt/gophish/config.json &&
-   sed -i 's/0.0.0.0:80/127.0.0.1:8080/g' /opt/gophish/config.json && 
+   sed -i 's/127.0.0.1/0.0.0.0/g' /opt/gophish/config.json &&
+ #  sed -i 's/0.0.0.0:80/127.0.0.1:8080/g' /opt/gophish/config.json && 
    
    echo
    sleep 2
@@ -393,7 +393,7 @@ setupSMS() {
   chown -R gophish:gophish /opt/gophish/ /var/log/gophish/ &&
   setcap cap_net_bind_service=+ep /opt/gophish/gophish &&
   systemctl daemon-reload &&
-  systemctl start gophish 
+  systemctl enable gophish 
   
 }
 
@@ -424,7 +424,7 @@ echo
    ### Manual
    #./certbot-auto certonly -d $domain --manual --preferred-challenges dns -m example@gmail.com --agree-tos && 
    ### Auto
-   certbot certonly --non-interactive --agree-tos --email example@gmail.com --standalone --preferred-challenges dns -d $domain &&
+   certbot certonly --non-interactive --agree-tos --email example@gmail.com --standalone --preferred-challenges http -d $domain &&
 
    echo "${blue}${bold}[*] Configuring New SSL cert for $domain...${clear}" &&
    wget https://raw.githubusercontent.com/pentest01/gophish.service/main/gophish-ssl.conf -P /etc/apache2/sites-available/ >/dev/null 2>&1
@@ -441,6 +441,7 @@ echo
    printf "User-agent: *\nDisallow: /" > /opt/gophish/static/endpoint/robots.txt &&
    echo
    echo "${green}${bold}[+] Check if the cert is correctly installed: https://$domain/robots.txt${clear}"
+   echo
 }
 
 gophishStart() {
@@ -453,7 +454,9 @@ gophishStart() {
       #ipAddr=$(ip -4 addr show | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | grep -v 127.0.0.1)
       ipAddr=$(curl ifconfig.io 2>/dev/null)
       pass=$(cat /var/log/gophish/gophish.log | grep 'Please login with' | cut -d '"' -f 4 | cut -d ' ' -f 10 | tail -n 1)
+      echo
       echo "${green}${bold}[+] Gophish Started: https://$ipAddr:3333 - [Login] Username: admin, Temporary Password: $pass${clear}"
+      echo
       echo "${green}${bold}[+] Configure 000-default.conf && automatically renew ssl...${clear}"
    else
       exit 1
