@@ -162,7 +162,7 @@ dependencyCheck() {
    else
       echo "${blue}${bold}[*] Installing Apache...${clear}"
       apt install apache2 -y && 
-      systemctl reload apache2
+     # systemctl stop apache2
    fi
    
    echo
@@ -427,7 +427,7 @@ echo
    ### Manual
    #./certbot-auto certonly -d $domain --manual --preferred-challenges dns -m example@gmail.com --agree-tos && 
    ### Auto
-   certbot certonly --non-interactive --agree-tos --email example@gmail.com --standalone --preferred-challenges http -d $domain &&
+   certbot certonly --non-interactive --agree-tos --email example@gmail.com --standalone --preferred-challenges dns -d $domain &&
 
    echo "${blue}${bold}[*] Configuring New SSL cert for $domain...${clear}" &&
    wget https://raw.githubusercontent.com/pentest01/gophish.service/main/gophish-ssl.conf -P /etc/apache2/sites-available/ >/dev/null 2>&1
