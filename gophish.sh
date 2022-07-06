@@ -104,13 +104,7 @@ dependencyCheck() {
    
    echo
    sleep 4
-   
-    echo "${blue}${bold}[*] Creating a gophish folder: /opt/gophish${clear}"
-    mkdir -p /opt/gophish
-
-   echo
-   sleep 4
-   
+      
    ### Checking/Installing unzip
    unzip=$(which unzip)
 
@@ -177,10 +171,15 @@ setupEmail() {
    
    ### Deleting Previous Gophish Source (*Need to be removed to update new rid)
    rm -rf /opt/gophish/
+   echo
+   sleep 3
+   
+   echo "${blue}${bold}[*] Creating a gophish folder: /opt/gophish${clear}"
+   mkdir -p /opt/gophish
 
    echo
-   sleep 4
-
+   sleep 3
+   
    ### Installing GoPhish v0.11.0
    if [ -d /opt/gophish/.git ]; then
       echo -e "${blue}${bold}[*] Updating Gophish."
@@ -192,10 +191,9 @@ setupEmail() {
       echo
    fi
 
-   echo
    sleep 2
 
-      # Stripping X-Gophish 
+   # Stripping X-Gophish 
       sed -i 's/X-Gophish-Contact/X-Contact/g' /opt/gophish/models/email_request_test.go
       sleep 2
       sed -i 's/X-Gophish-Contact/X-Contact/g' /opt/gophish/models/maillog.go
@@ -266,9 +264,14 @@ setupSMS() {
 
    ### Deleting Previous Gophish Source (*Need to be removed to update new rid)
    rm -rf /opt/gophish/
-   
    echo
-   sleep 4
+   sleep 3
+   
+   echo "${blue}${bold}[*] Creating a gophish folder: /opt/gophish${clear}"
+   mkdir -p /opt/gophish
+
+   echo
+   sleep 3
 
     ### Installing GoPhish v0.11.0
       if [ -d /opt/gophish/.git ]; then
@@ -280,7 +283,7 @@ setupSMS() {
       git clone https://github.com/gophish/gophish.git /opt/gophish
       echo
    fi
-   echo
+   
    sleep 2
 
       # Stripping X-Gophish 
