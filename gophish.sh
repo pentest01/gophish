@@ -167,7 +167,7 @@ dependencyCheck() {
 ### Setup Email Version Gophish
 setupEmail() {
    ### Cleaning Port 80
-   fuser -k -s -n tcp 80
+   lsof -t -i tcp:80 | xargs kill
    
    ### Deleting Previous Gophish Source (*Need to be removed to update new rid)
    rm -rf /opt/gophish/
@@ -253,13 +253,14 @@ setupEmail() {
   chown -R gophish:gophish /opt/gophish/ /var/log/gophish/ &&
   setcap cap_net_bind_service=+ep /opt/gophish/gophish &&
   systemctl daemon-reload
+  systemctl start gophish &&
   systemctl enable gophish 
 
 }
 
 setupSMS() {
    ### Cleaning Port 80
-   fuser -k -s -n tcp 80
+   lsof -t -i tcp:80 | xargs kill
 
    ### Deleting Previous Gophish Source (*Need to be removed to update new rid)
    rm -rf /opt/gophish/
@@ -396,6 +397,7 @@ setupSMS() {
   chown -R gophish:gophish /opt/gophish/ /var/log/gophish/ &&
   setcap cap_net_bind_service=+ep /opt/gophish/gophish &&
   systemctl daemon-reload
+  systemctl start gophish &&
   systemctl enable gophish 
    
   echo
@@ -407,10 +409,11 @@ setupSMS() {
 ### Setup SSL Cert
 letsEncrypt() {
    ### Clearning Port 80
-   fuser -k -s -n tcp 80 
-   
-   ### Stopping apache2
-   systemctl stop apache2
+   lsof -t -i tcp:80 | xargs kill
+  
+   ### Stopping Apache2 and Gophish
+   systemctl stop apache2 &&
+   systemctl stop gophish
       
    ### Installing certbot-auto
    certbot=$(which certbot)
@@ -458,7 +461,7 @@ gophishStart() {
    if [[ $service ]];
      then
       sleep 2
-      systemctl restart gophish && sudo systemctl restart apache2
+      systemctl start gophish && systemctl restart apache2
       echo
       #ipAddr=$(ip -4 addr show | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | grep -v 127.0.0.1)
       ipAddr=$(curl ifconfig.io 2>/dev/null)
