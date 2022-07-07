@@ -411,8 +411,7 @@ letsEncrypt() {
    ### Clearning Port 80
    lsof -t -i tcp:80 | xargs kill
   
-   ### Stopping Apache2 and Gophish
-   systemctl stop apache2 &&
+   ### Stopping Gophish
    systemctl stop gophish
       
    ### Installing certbot-auto
