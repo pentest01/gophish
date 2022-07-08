@@ -469,6 +469,10 @@ gophishStart() {
       echo "${green}${bold}[+] Gophish Started: https://$ipAddr:3333 - [Login] Username: admin, Temporary Password: $pass${clear}"
       echo
       echo "${green}${bold}[+] Configure 000-default.conf && automatically renew ssl...${clear}"
+      echo
+      #check open ports
+      lsof -nP -iTCP -sTCP:LISTEN
+      echo
    else
       exit 1
    fi
