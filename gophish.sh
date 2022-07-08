@@ -446,7 +446,7 @@ echo
    sed -i 's/ssl-cert-snakeoil.key/privkey.pem/g' /etc/apache2/sites-available/gophish-ssl.conf &&
    sed -i 's/example.key/privkey.pem/g' /opt/gophish/config.json &&
    sed -i 's/gophish_admin.crt/fullchain.pem/g' /opt/gophish/config.json &&
-   sed -i 's/gophish_admin.key/privkey.pem/g' /opt/gophish/config.json &&
+   sed -i 's/gophish_admin.key/privkey.pem/g' /opt/gophish/config.json && chmod 755 privkey.pem
    mkdir -p /opt/gophish/static/endpoint &&
    printf "User-agent: *\nDisallow: /" > /opt/gophish/static/endpoint/robots.txt &&
    echo
