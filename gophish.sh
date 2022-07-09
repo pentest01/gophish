@@ -239,7 +239,8 @@ setupEmail() {
   cd /opt/gophish && go build
   
   echo "${blue}${bold}[*] Changing ip...${clear}"
-  sed -i 's/127.0.0.1:3333/0.0.0.0:3333/g' /opt/gophish/config.json &&
+  sed -i 's/127.0.0.1:3333/0.0.0.0:3333/g' /opt/gophish/config.json 
+  sed -i 's/0.0.0.0:80/127.0.0.1:80/g' /opt/gophish/config.json
   
   echo
   sleep 2
@@ -335,6 +336,7 @@ setupSMS() {
    
    echo "${blue}${bold}[*] Changing ip...${clear}"
    sed -i 's/127.0.0.1:3333/0.0.0.0:3333/g' /opt/gophish/config.json &&
+   sed -i 's/0.0.0.0:80/127.0.0.1:80/g' /opt/gophish/config.json 
    
    echo
    sleep 2
