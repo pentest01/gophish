@@ -287,7 +287,7 @@ setupSMS() {
    
    sleep 2
 
-      # Stripping X-Gophish 
+   # Stripping X-Gophish 
       sed -i 's/X-Gophish-Contact/X-Contact/g' /opt/gophish/models/email_request_test.go
       sleep 2
       sed -i 's/X-Gophish-Contact/X-Contact/g' /opt/gophish/models/maillog.go
@@ -301,11 +301,11 @@ setupSMS() {
       sleep 2
    # Changing servername
       sed -i 's/const ServerName = "gophish"/const ServerName = "IGNORE"/' /opt/gophish/config/config.go
-     sleep 2
+      sleep 2
    # Changing rid value
       #sed -i 's/const RecipientParameter = "rid"/const RecipientParameter = "keyname"/g' /opt/gophish/models/campaign.go
    #   echo
-  #    sleep 2
+   #   sleep 2
    # Downloading external files
       wget https://raw.githubusercontent.com/pentest01/gophish-extension/main/phish.go -P /opt/gophish/ >/dev/null 2>&1
       sleep 2
@@ -450,6 +450,7 @@ echo
    sed -i 's/gophish_admin.crt/fullchain.pem/g' /opt/gophish/config.json &&
    sed -i 's/gophish_admin.key/privkey.pem/g' /opt/gophish/config.json && chmod 755 privkey.pem
    mkdir -p /opt/gophish/static/endpoint &&
+   systemctl restart apache2
    printf "User-agent: *\nDisallow: /" > /opt/gophish/static/endpoint/robots.txt &&
    echo
    echo "${green}${bold}[+] Check if the cert is correctly installed: https://$domain/robots.txt${clear}"
@@ -462,7 +463,7 @@ gophishStart() {
    if [[ $service ]];
      then
       sleep 2
-      systemctl start gophish && systemctl restart apache2
+      systemctl start gophish
       echo
       #ipAddr=$(ip -4 addr show | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | grep -v 127.0.0.1)
       ipAddr=$(curl ifconfig.io 2>/dev/null)
