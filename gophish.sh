@@ -489,6 +489,7 @@ cleanUp() {
    rm -rf /etc/letsencrypt/archive/* 2>/dev/null
    rm -rf /etc/letsencrypt/live/* 2>/dev/null
    rm -rf /etc/letsencrypt/renewal/* 2>/dev/null
+   rm -rf /etc/letsencrypt/  2>/dev/null
    echo "${green}${bold}[+] Done!${clear}"
 }
 
