@@ -169,6 +169,8 @@ setupEmail() {
    ### Cleaning Port 80
    lsof -t -i tcp:80 | xargs kill
    
+   ufw disable
+   
    ### Deleting Previous Gophish Source (*Need to be removed to update new rid)
    rm -rf /opt/gophish/
    echo
@@ -262,6 +264,8 @@ setupEmail() {
 setupSMS() {
    ### Cleaning Port 80
    lsof -t -i tcp:80 | xargs kill
+   
+   ufw disable
 
    ### Deleting Previous Gophish Source (*Need to be removed to update new rid)
    rm -rf /opt/gophish/
@@ -445,11 +449,9 @@ echo
    cp /etc/letsencrypt/live/$domain/privkey.pem /opt/gophish/privkey.pem &&
    cp /etc/letsencrypt/live/$domain/fullchain.pem /etc/ssl/certs/fullchain.pem &&
    cp /etc/letsencrypt/live/$domain/fullchain.pem /etc/ssl/private/privkey.pem &&
-   sed -i 's/false/true/g' /opt/gophish/config.json &&
    sed -i 's/:80/:8443/g' /opt/gophish/config.json &&
    sed -i 's/ssl-cert-snakeoil.pem/fullchain.pem/g' /etc/apache2/sites-available/gophish-ssl.conf &&
    sed -i 's/ssl-cert-snakeoil.key/privkey.pem/g' /etc/apache2/sites-available/gophish-ssl.conf &&
-   sed -i 's/example.key/privkey.pem/g' /opt/gophish/config.json &&
    sed -i 's/gophish_admin.crt/fullchain.pem/g' /opt/gophish/config.json &&
    sed -i 's/gophish_admin.key/privkey.pem/g' /opt/gophish/config.json && chmod 755 privkey.pem
    mkdir -p /opt/gophish/static/endpoint &&
