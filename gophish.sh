@@ -472,6 +472,9 @@ gophishStart() {
       echo
       echo "${green}${bold}[+] Configure 000-default.conf && automatically renew ssl...${clear}"
       echo
+      echo "${green}${bold}[+] Configure .htaccess file in /etc/apache2/redirect.rules ${clear}"
+
+      echo
       #check open ports
       lsof -nP -iTCP -sTCP:LISTEN
       echo
