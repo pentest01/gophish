@@ -275,11 +275,12 @@ setupSMS() {
    sleep 3
 
     ### Installing GoPhish v0.11.0
-      if [ -d /opt/gophish/.git ]; then
+   if [ -d /opt/gophish/.git ]; 
+   then
       echo -e "${blue}${bold}[*] Updating Gophish."
       cd /opt/gophish; git pull
       echo
-    else
+   else
       echo -e "${blue}${bold}[*] Downloading Gophish...${clear}"
       git clone https://github.com/gophish/gophish.git /opt/gophish
       echo
@@ -440,8 +441,10 @@ echo
    echo "${blue}${bold}[*] Configuring New SSL cert for $domain...${clear}"
    wget https://raw.githubusercontent.com/pentest01/gophish.service/main/gophish-ssl.conf -P /etc/apache2/sites-available/ >/dev/null 2>&1
    a2ensite gophish-ssl.conf && a2enmod ssl && a2enmod proxy && a2enmod proxy_http
-   cp /etc/letsencrypt/live/$domain/privkey.pem /opt/gophish/privkey.pem &&
    cp /etc/letsencrypt/live/$domain/fullchain.pem /opt/gophish/fullchain.pem &&
+   cp /etc/letsencrypt/live/$domain/privkey.pem /opt/gophish/privkey.pem &&
+   cp /etc/letsencrypt/live/$domain/fullchain.pem /etc/ssl/certs/fullchain.pem &&
+   cp /etc/letsencrypt/live/$domain/fullchain.pem /etc/ssl/private/privkey.pem &&
    sed -i 's/false/true/g' /opt/gophish/config.json &&
    sed -i 's/:80/:8443/g' /opt/gophish/config.json &&
    sed -i 's/ssl-cert-snakeoil.pem/fullchain.pem/g' /etc/apache2/sites-available/gophish-ssl.conf &&
