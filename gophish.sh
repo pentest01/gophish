@@ -448,7 +448,7 @@ echo
    cp /etc/letsencrypt/live/$domain/fullchain.pem /opt/gophish/fullchain.pem &&
    cp /etc/letsencrypt/live/$domain/privkey.pem /opt/gophish/privkey.pem &&
    cp /etc/letsencrypt/live/$domain/fullchain.pem /etc/ssl/certs/fullchain.pem &&
-   cp /etc/letsencrypt/live/$domain/fullchain.pem /etc/ssl/private/privkey.pem &&
+   cp /etc/letsencrypt/live/$domain/privkey.pem /etc/ssl/private/privkey.pem &&
    sed -i 's/:80/:8443/g' /opt/gophish/config.json &&
    sed -i 's/ssl-cert-snakeoil.pem/fullchain.pem/g' /etc/apache2/sites-available/gophish-ssl.conf &&
    sed -i 's/ssl-cert-snakeoil.key/privkey.pem/g' /etc/apache2/sites-available/gophish-ssl.conf &&
